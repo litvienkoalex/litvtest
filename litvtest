@@ -1,0 +1,14 @@
+
+	: Alloc(alloc), mSlabs(alloc), mElementsPerSlab(elementsPerSlab), mUsed(0), mSlabSize(slabSize), mFreeElement(0)
+	{
+		PX_COMPILE_TIME_ASSERT(sizeof(T) >= sizeof(size_t));
+	}
+
+  public:
+	~PoolBase()
+	// Allocate space for single object
+	PX_INLINE T* allocate()
+	{
+		if(mFreeElement == 0)
+			allocateSlab();
+		T* p = reinterpret_cast<T*>(mFreeElement);
